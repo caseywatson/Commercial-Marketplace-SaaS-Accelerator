@@ -21,6 +21,24 @@ namespace Microsoft.Marketplace.SaaS.SDK.Services.Models
         public string ID { get; set; }
 
         /// <summary>
+        /// Gets or sets the subscription identifier.
+        /// </summary>
+        /// <value>
+        /// The subscription identifier.
+        /// </value>
+        [JsonPropertyName("subscriptionId")]
+        public string SubscriptionID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action type.
+        /// </summary>
+        /// <value>
+        /// The action type.
+        /// </value>
+        [JsonPropertyName("actionType")]
+        public string ActionType { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         /// <value>

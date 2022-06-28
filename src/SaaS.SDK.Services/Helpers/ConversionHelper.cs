@@ -182,6 +182,8 @@ namespace Microsoft.Marketplace.SaaS.SDK.Services.Helpers
               ID = operation.Id?.ToString(),
               Status = (Models.OperationStatusEnum)Enum.Parse(typeof(Models.OperationStatusEnum), operation.Status.ToString()),
               Created = operation.TimeStamp.Value.UtcDateTime
+              // Add subscription ID
+              // Add action type
             };
         }
     }

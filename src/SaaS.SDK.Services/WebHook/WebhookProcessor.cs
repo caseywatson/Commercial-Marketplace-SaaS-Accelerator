@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 namespace Microsoft.Marketplace.SaaS.SDK.Services.WebHook
 {
+    using System;
     using System.Threading.Tasks;
     using Microsoft.Marketplace.SaaS.SDK.Services.Contracts;
 
@@ -39,31 +40,45 @@ namespace Microsoft.Marketplace.SaaS.SDK.Services.WebHook
         /// <returns> Notification.</returns>
         public async Task ProcessWebhookNotificationAsync(WebhookPayload payload)
         {
-            switch (payload.Action)
+            //Add validate here.
+
+            var apiOperation = await apiClient.GetOperationStatusResultAsync(
+                payload.SubscriptionId,
+                payload.OperationId
+            );
+
+            if (apiOperation == null &&
+                apiOperation.ID == payload.OperationId.ToString()) {
+                throw new InvalidOperationException($"Unable to verify webhook notification [{apiOperation.ID}].");
+            }
+            else
             {
-                case WebhookAction.Unsubscribe:
-                    await this.webhookHandler.UnsubscribedAsync(payload).ConfigureAwait(false);
-                    break;
+                switch (payload.Action)
+                {
+                    case WebhookAction.Unsubscribe:
+                        await this.webhookHandler.UnsubscribedAsync(payload).ConfigureAwait(false);
+                        break;
 
-                case WebhookAction.ChangePlan:
-                    await this.webhookHandler.ChangePlanAsync(payload).ConfigureAwait(false);
-                    break;
+                    case WebhookAction.ChangePlan:
+                        await this.webhookHandler.ChangePlanAsync(payload).ConfigureAwait(false);
+                        break;
 
-                case WebhookAction.ChangeQuantity:
-                    await this.webhookHandler.ChangeQuantityAsync(payload).ConfigureAwait(false);
-                    break;
+                    case WebhookAction.ChangeQuantity:
+                        await this.webhookHandler.ChangeQuantityAsync(payload).ConfigureAwait(false);
+                        break;
 
-                case WebhookAction.Suspend:
-                    await this.webhookHandler.SuspendedAsync(payload).ConfigureAwait(false);
-                    break;
+                    case WebhookAction.Suspend:
+                        await this.webhookHandler.SuspendedAsync(payload).ConfigureAwait(false);
+                        break;
 
-                case WebhookAction.Reinstate:
-                    await this.webhookHandler.ReinstatedAsync(payload).ConfigureAwait(false);
-                    break;
+                    case WebhookAction.Reinstate:
+                        await this.webhookHandler.ReinstatedAsync(payload).ConfigureAwait(false);
+                        break;
 
-                default:
-                    await this.webhookHandler.UnknownActionAsync(payload).ConfigureAwait(false);
-                    break;
+                    default:
+                        await this.webhookHandler.UnknownActionAsync(payload).ConfigureAwait(false);
+                        break;
+                }
             }
         }
     }

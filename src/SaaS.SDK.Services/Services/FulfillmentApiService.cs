@@ -225,6 +225,7 @@ namespace Microsoft.Marketplace.SaaS.SDK.Services.Services
             try 
             { 
                 var operationDetails = (await this.marketplaceClient.Operations.GetOperationStatusAsync(subscriptionId, operationId)).Value;
+
                 return operationDetails.operationResult();
             }
             catch (RequestFailedException ex)
